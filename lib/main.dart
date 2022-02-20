@@ -1,3 +1,4 @@
+import 'package:auth_flutter/screens/dashboard_screen.dart';
 import 'package:auth_flutter/screens/login_screen.dart';
 import 'package:auth_flutter/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/material.dart';
 main() {
   runApp(MaterialApp(
     theme: ThemeData(
-      pageTransitionsTheme: PageTransitionsTheme(builders: {
+      pageTransitionsTheme: const PageTransitionsTheme(builders: {
         TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       }),
@@ -15,6 +16,7 @@ main() {
     routes: {
       "/": (context) => const LoginScreen(),
       "/signup": (context) => const SignupScreen(),
+      "/dashboard": (context) => const DashboardScreen(),
     },
   ));
 }
