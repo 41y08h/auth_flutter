@@ -1,7 +1,46 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-class LoginScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  String username = "";
+  String password = "";
+
+  void handleSubmit() async {
+    http.Response response = await http.post(
+      Uri.parse("http://192.168.0.104:5000/login"),
+      headers: {"Content-Type": "application/json; charset=UTF-8"},
+      body: jsonEncode({
+        "username": username,
+        "password": password,
+      }),
+    );
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      // Save token in shared preferences
+      final perfs = await SharedPreferences.getInstance();
+      await perfs.setString("token", data["token"]);
+
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil("/dashboard", (route) => false);
+    } else {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(data["error"]["message"]),
+        duration: const Duration(seconds: 3),
+      ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,21 +59,34 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              const TextField(
-                decoration: InputDecoration(
-                  hintText: "Email",
+              TextField(
+                decoration: const InputDecoration(
+                  hintText: "Username",
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    username = value;
+                  });
+                },
               ),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                obscureText: true,
+                autocorrect: false,
+                enableSuggestions: false,
+                decoration: const InputDecoration(
                   hintText: "Password",
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    password = value;
+                  });
+                },
               ),
               const SizedBox(
                 height: 30,
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: handleSubmit,
                 child: const Text("Login"),
               ),
               const SizedBox(
