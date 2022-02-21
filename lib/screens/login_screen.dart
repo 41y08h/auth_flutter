@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await prefs.setString("token", data["token"]);
 
       Navigator.of(context)
-          .pushNamedAndRemoveUntil("/dashboard", (route) => false);
+          .pushNamedAndRemoveUntil("dashboard", (route) => false);
     } else {
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

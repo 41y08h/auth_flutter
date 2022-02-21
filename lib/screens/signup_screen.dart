@@ -40,7 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
     await prefs.setString("token", data["token"]);
 
     Navigator.of(context)
-        .pushNamedAndRemoveUntil("/dashboard", (route) => false);
+        .pushNamedAndRemoveUntil("dashboard", (route) => false);
   }
 
   @override
