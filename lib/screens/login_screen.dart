@@ -28,8 +28,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (response.statusCode == 200) {
       // Save token in shared preferences
-      final perfs = await SharedPreferences.getInstance();
-      await perfs.setString("token", data["token"]);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString("token", data["token"]);
 
       Navigator.of(context)
           .pushNamedAndRemoveUntil("/dashboard", (route) => false);
@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Text("Don't have an account?"),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, "/signup");
+                      Navigator.pushNamed(context, "signup");
                     },
                     child: const Text("Sign up"),
                   ),
