@@ -1,8 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  String username = "";
+
+  @override
+  void initState() {
+    super.initState();
+    getUsername();
+  }
+
+  void getUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      Map<String, dynamic> user =
+          JwtDecoder.decode(prefs.getString('token') ?? "");
+      username = user['username'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +43,7 @@ class DashboardScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Dashboard"),
+              Text("Welcome @$username"),
               TextButton.icon(
                 onPressed: onLogoutButtonPressed,
                 icon: Icon(Icons.logout),
